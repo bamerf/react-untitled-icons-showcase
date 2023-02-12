@@ -1,91 +1,336 @@
-import Image from 'next/image'
-import { Inter } from '@next/font/google'
-import styles from './page.module.css'
+'use client';
 
-const inter = Inter({ subsets: ['latin'] })
+import { Inter } from '@next/font/google';
+import { useEffect, useState } from 'react';
+import clsx from 'clsx';
+import { ChakraProvider } from '@chakra-ui/react';
+import { Input } from '@chakra-ui/react';
+import Fuse from 'fuse.js';
+
+import {
+  BrowserIcon,
+  CodingIcon,
+  CountryIcon,
+  DesignIcon,
+  FinanceIcon,
+  MessengerIcon,
+  MusicIcon,
+  OSIcon,
+  OtherIcon,
+  ProductivityIcon,
+  SocialIcon,
+  VideoIcon,
+} from '@bamerf/react-untitled-icons';
+import {
+  codingIconNames,
+  socialIconNames,
+  productivityIconNames,
+  browserIconsNames,
+  messengerIconNames,
+  designIconsNames,
+  osIconsNames,
+  videoIconsNames,
+  musicIconsNames,
+  financeIconsNames,
+  otherIconsNames,
+} from './iconNames';
+import { Card } from '@/components/Card';
+
+const inter = Inter({ subsets: ['latin'] });
+const size = 32;
+
+type TFuse = {
+  item: string;
+}[];
 
 export default function Home() {
+  const [value, setValue] = useState('');
+  const [searchValue, setSearchValue] = useState<TFuse>([]);
+
+  useEffect(() => {
+    const fuse = new Fuse(
+      [
+        ...browserIconsNames,
+        ...socialIconNames,
+        ...productivityIconNames,
+        ...messengerIconNames,
+        ...codingIconNames,
+        ...designIconsNames,
+        ...osIconsNames,
+        ...videoIconsNames,
+        ...musicIconsNames,
+        ...financeIconsNames,
+        ...otherIconsNames,
+      ],
+      {
+        threshold: 0.5,
+        keys: ['name'],
+      }
+    );
+
+    const result = fuse.search(value);
+    setSearchValue(result as unknown as TFuse);
+  }, [value]);
+
+  const existsInCategory = (iconNames: string[]): boolean => {
+    return (
+      iconNames.filter((icon) =>
+        searchValue.length > 0 ? searchValue.some((e) => e.item === icon) : true
+      ).length > 0
+    );
+  };
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <ChakraProvider>
+      <main
+        className={clsx(
+          inter.className,
+          'max-w-4xl mx-auto px-8 py-32 flex flex-col gap-16'
+        )}
+      >
+        <div className="flex gap-3">
+          <Input
+            className="bg-neutral-800 text-neutral-200 hover:bg-neutral-700"
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            variant="filled"
+            placeholder="Search"
+            _placeholder={{ color: 'neutral.200' }}
+          />
         </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-        <div className={styles.thirteen}>
-          <Image src="/thirteen.svg" alt="13" width={40} height={31} priority />
+        <div className="flex flex-col gap-16">
+          {existsInCategory(browserIconsNames) && (
+            <div className="flex flex-col gap-6">
+              <h3 className="font-bold text-xl text-gray-200">Browser Icons</h3>
+              <div className="flex flex-wrap gap-3">
+                {browserIconsNames
+                  .filter((icon) =>
+                    searchValue.length > 0
+                      ? searchValue.some((e) => e.item === icon)
+                      : true
+                  )
+                  .map((name) => (
+                    <Card
+                      key={name}
+                      icon={<BrowserIcon size={size} name={name} />}
+                      name={name}
+                    />
+                  ))}
+              </div>
+            </div>
+          )}
+          {existsInCategory(socialIconNames) && (
+            <div className="flex flex-col gap-6">
+              <h3 className="font-bold text-xl text-gray-200">Social Icons</h3>
+              <div className="flex flex-wrap gap-3">
+                {socialIconNames
+                  .filter((icon) =>
+                    searchValue.length > 0
+                      ? searchValue.some((e) => e.item === icon)
+                      : true
+                  )
+                  .map((name) => (
+                    <Card
+                      key={name}
+                      icon={<SocialIcon name={name} size={size} />}
+                      name={name}
+                    />
+                  ))}
+              </div>
+            </div>
+          )}
+          {existsInCategory(messengerIconNames) && (
+            <div className="flex flex-col gap-6">
+              <h3 className="font-bold text-xl text-gray-200">
+                Messenger Icons
+              </h3>
+              <div className="flex flex-wrap gap-3">
+                {messengerIconNames
+                  .filter((icon) =>
+                    searchValue.length > 0
+                      ? searchValue.some((e) => e.item === icon)
+                      : true
+                  )
+                  .map((name) => (
+                    <Card
+                      icon={<MessengerIcon name={name} size={size} />}
+                      name={name}
+                      key={name}
+                    />
+                  ))}
+              </div>
+            </div>
+          )}
+          {existsInCategory(codingIconNames) && (
+            <div className="flex flex-col gap-6">
+              <h3 className="font-bold text-xl text-gray-200">Coding Icons</h3>
+              <div className="flex flex-wrap gap-3">
+                {codingIconNames
+                  .filter((icon) =>
+                    searchValue.length > 0
+                      ? searchValue.some((e) => e.item === icon)
+                      : true
+                  )
+                  .map((name) => (
+                    <Card
+                      icon={<CodingIcon name={name} size={size} />}
+                      name={name}
+                      key={name}
+                    />
+                  ))}
+              </div>
+            </div>
+          )}
+          {existsInCategory(productivityIconNames) && (
+            <div className="flex flex-col gap-6">
+              <h3 className="font-bold text-xl text-gray-200">
+                Productivity Icons
+              </h3>
+              <div className="flex flex-wrap gap-3">
+                {productivityIconNames
+                  .filter((icon) =>
+                    searchValue.length > 0
+                      ? searchValue.some((e) => e.item === icon)
+                      : true
+                  )
+                  .map((name) => (
+                    <Card
+                      icon={<ProductivityIcon name={name} size={size} />}
+                      name={name}
+                      key={name}
+                    />
+                  ))}
+              </div>
+            </div>
+          )}
+          {existsInCategory(designIconsNames) && (
+            <div className="flex flex-col gap-6">
+              <h3 className="font-bold text-xl text-gray-200">Design Icons</h3>
+              <div className="flex flex-wrap gap-3">
+                {designIconsNames
+                  .filter((icon) =>
+                    searchValue.length > 0
+                      ? searchValue.some((e) => e.item === icon)
+                      : true
+                  )
+                  .map((name) => (
+                    <Card
+                      icon={<DesignIcon key={name} name={name} size={size} />}
+                      name={name}
+                      key={name}
+                    />
+                  ))}
+              </div>
+            </div>
+          )}
+          {existsInCategory(osIconsNames) && (
+            <div className="flex flex-col gap-6">
+              <h3 className="font-bold text-xl text-gray-200">OS Icons</h3>
+              <div className="flex flex-wrap gap-3">
+                {osIconsNames
+                  .filter((icon) =>
+                    searchValue.length > 0
+                      ? searchValue.some((e) => e.item === icon)
+                      : true
+                  )
+                  .map((name) => (
+                    <Card
+                      icon={<OSIcon name={name} size={size} />}
+                      name={name}
+                      key={name}
+                    />
+                  ))}
+              </div>
+            </div>
+          )}
+          {existsInCategory(videoIconsNames) && (
+            <div className="flex flex-col gap-6">
+              <h3 className="font-bold text-xl text-gray-200">Video Icons</h3>
+              <div className="flex flex-wrap gap-3">
+                {videoIconsNames
+                  .filter((icon) =>
+                    searchValue.length > 0
+                      ? searchValue.some((e) => e.item === icon)
+                      : true
+                  )
+                  .map((name) => (
+                    <Card
+                      icon={<VideoIcon name={name} size={size} />}
+                      name={name}
+                      key={name}
+                    />
+                  ))}
+              </div>
+            </div>
+          )}
+          {existsInCategory(musicIconsNames) && (
+            <div className="flex flex-col gap-6">
+              <h3 className="font-bold text-xl text-gray-200">Music Icons</h3>
+              <div className="flex flex-wrap gap-3">
+                {musicIconsNames
+                  .filter((icon) =>
+                    searchValue.length > 0
+                      ? searchValue.some((e) => e.item === icon)
+                      : true
+                  )
+                  .map((name) => (
+                    <Card
+                      icon={<MusicIcon name={name} size={size} />}
+                      name={name}
+                      key={name}
+                    />
+                  ))}
+              </div>
+            </div>
+          )}
+          {existsInCategory(financeIconsNames) && (
+            <div className="flex flex-col gap-6">
+              <h3 className="font-bold text-xl text-gray-200">Finance Icons</h3>
+              <div className="flex flex-wrap gap-3">
+                {financeIconsNames
+                  .filter((icon) =>
+                    searchValue.length > 0
+                      ? searchValue.some((e) => e.item === icon)
+                      : true
+                  )
+                  .map((name) => (
+                    <Card
+                      icon={<FinanceIcon name={name} size={size} />}
+                      name={name}
+                      key={name}
+                    />
+                  ))}
+              </div>
+            </div>
+          )}
+          {/* <div className="flex flex-col gap-6">
+            <h3 className="font-bold text-xl text-gray-200">Country Icons</h3>
+            {otherIconsNames.map((name) => (
+              <CountryIcon key={name} name={name} size={size} />
+            ))}
+          </div> */}
+          {existsInCategory(otherIconsNames) && (
+            <div className="flex flex-col gap-6">
+              <h3 className="font-bold text-xl text-gray-200">Other Icons</h3>
+              <div className="flex flex-wrap gap-3">
+                {otherIconsNames
+                  .filter((icon) =>
+                    searchValue.length > 0
+                      ? searchValue.some((e) => e.item === icon)
+                      : true
+                  )
+                  .map((name) => (
+                    <Card
+                      icon={<OtherIcon name={name} size={size} />}
+                      name={name}
+                      key={name}
+                    />
+                  ))}
+              </div>
+            </div>
+          )}
         </div>
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://beta.nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={inter.className}>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p className={inter.className}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={inter.className}>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p className={inter.className}>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={inter.className}>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p className={inter.className}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+      </main>
+    </ChakraProvider>
+  );
 }

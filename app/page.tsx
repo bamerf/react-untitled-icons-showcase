@@ -33,6 +33,7 @@ import {
   musicIconsNames,
   financeIconsNames,
   otherIconsNames,
+  countryIconNames,
 } from './iconNames';
 import { Card } from '@/components/Card';
 
@@ -61,9 +62,10 @@ export default function Home() {
         ...musicIconsNames,
         ...financeIconsNames,
         ...otherIconsNames,
+        ...countryIconNames,
       ],
       {
-        threshold: 0.5,
+        threshold: 0.3,
         keys: ['name'],
       }
     );
@@ -78,6 +80,54 @@ export default function Home() {
         searchValue.length > 0 ? searchValue.some((e) => e.item === icon) : true
       ).length > 0
     );
+  };
+
+  const components = {
+    BrowserIcon,
+    SocialIcon,
+    MessengerIcon,
+    CodingIcon,
+    ProductivityIcon,
+    DesignIcon,
+    OSIcon,
+    VideoIcon,
+    MusicIcon,
+    FinanceIcon,
+    OtherIcon,
+    CountryIcon,
+  };
+
+  const Section = ({
+    iconNames,
+    title,
+    componentName,
+  }: {
+    iconNames: string[];
+    title: string;
+    componentName: string;
+  }) => {
+    // @ts-ignore
+    const Component = components[componentName];
+    return existsInCategory(iconNames) ? (
+      <div className="flex flex-col gap-6">
+        <h3 className="font-bold text-xl text-gray-200">{title}</h3>
+        <div className="flex flex-wrap gap-3">
+          {iconNames
+            .filter((icon) =>
+              searchValue.length > 0
+                ? searchValue.some((e) => e.item === icon)
+                : true
+            )
+            .map((name) => (
+              <Card
+                key={name}
+                icon={<Component size={size} name={name} />}
+                name={name}
+              />
+            ))}
+        </div>
+      </div>
+    ) : null;
   };
 
   return (
@@ -99,236 +149,66 @@ export default function Home() {
           />
         </div>
         <div className="flex flex-col gap-16">
-          {existsInCategory(browserIconsNames) && (
-            <div className="flex flex-col gap-6">
-              <h3 className="font-bold text-xl text-gray-200">Browser Icons</h3>
-              <div className="flex flex-wrap gap-3">
-                {browserIconsNames
-                  .filter((icon) =>
-                    searchValue.length > 0
-                      ? searchValue.some((e) => e.item === icon)
-                      : true
-                  )
-                  .map((name) => (
-                    <Card
-                      key={name}
-                      icon={<BrowserIcon size={size} name={name} />}
-                      name={name}
-                    />
-                  ))}
-              </div>
-            </div>
-          )}
-          {existsInCategory(socialIconNames) && (
-            <div className="flex flex-col gap-6">
-              <h3 className="font-bold text-xl text-gray-200">Social Icons</h3>
-              <div className="flex flex-wrap gap-3">
-                {socialIconNames
-                  .filter((icon) =>
-                    searchValue.length > 0
-                      ? searchValue.some((e) => e.item === icon)
-                      : true
-                  )
-                  .map((name) => (
-                    <Card
-                      key={name}
-                      icon={<SocialIcon name={name} size={size} />}
-                      name={name}
-                    />
-                  ))}
-              </div>
-            </div>
-          )}
-          {existsInCategory(messengerIconNames) && (
-            <div className="flex flex-col gap-6">
-              <h3 className="font-bold text-xl text-gray-200">
-                Messenger Icons
-              </h3>
-              <div className="flex flex-wrap gap-3">
-                {messengerIconNames
-                  .filter((icon) =>
-                    searchValue.length > 0
-                      ? searchValue.some((e) => e.item === icon)
-                      : true
-                  )
-                  .map((name) => (
-                    <Card
-                      icon={<MessengerIcon name={name} size={size} />}
-                      name={name}
-                      key={name}
-                    />
-                  ))}
-              </div>
-            </div>
-          )}
-          {existsInCategory(codingIconNames) && (
-            <div className="flex flex-col gap-6">
-              <h3 className="font-bold text-xl text-gray-200">Coding Icons</h3>
-              <div className="flex flex-wrap gap-3">
-                {codingIconNames
-                  .filter((icon) =>
-                    searchValue.length > 0
-                      ? searchValue.some((e) => e.item === icon)
-                      : true
-                  )
-                  .map((name) => (
-                    <Card
-                      icon={<CodingIcon name={name} size={size} />}
-                      name={name}
-                      key={name}
-                    />
-                  ))}
-              </div>
-            </div>
-          )}
-          {existsInCategory(productivityIconNames) && (
-            <div className="flex flex-col gap-6">
-              <h3 className="font-bold text-xl text-gray-200">
-                Productivity Icons
-              </h3>
-              <div className="flex flex-wrap gap-3">
-                {productivityIconNames
-                  .filter((icon) =>
-                    searchValue.length > 0
-                      ? searchValue.some((e) => e.item === icon)
-                      : true
-                  )
-                  .map((name) => (
-                    <Card
-                      icon={<ProductivityIcon name={name} size={size} />}
-                      name={name}
-                      key={name}
-                    />
-                  ))}
-              </div>
-            </div>
-          )}
-          {existsInCategory(designIconsNames) && (
-            <div className="flex flex-col gap-6">
-              <h3 className="font-bold text-xl text-gray-200">Design Icons</h3>
-              <div className="flex flex-wrap gap-3">
-                {designIconsNames
-                  .filter((icon) =>
-                    searchValue.length > 0
-                      ? searchValue.some((e) => e.item === icon)
-                      : true
-                  )
-                  .map((name) => (
-                    <Card
-                      icon={<DesignIcon key={name} name={name} size={size} />}
-                      name={name}
-                      key={name}
-                    />
-                  ))}
-              </div>
-            </div>
-          )}
-          {existsInCategory(osIconsNames) && (
-            <div className="flex flex-col gap-6">
-              <h3 className="font-bold text-xl text-gray-200">OS Icons</h3>
-              <div className="flex flex-wrap gap-3">
-                {osIconsNames
-                  .filter((icon) =>
-                    searchValue.length > 0
-                      ? searchValue.some((e) => e.item === icon)
-                      : true
-                  )
-                  .map((name) => (
-                    <Card
-                      icon={<OSIcon name={name} size={size} />}
-                      name={name}
-                      key={name}
-                    />
-                  ))}
-              </div>
-            </div>
-          )}
-          {existsInCategory(videoIconsNames) && (
-            <div className="flex flex-col gap-6">
-              <h3 className="font-bold text-xl text-gray-200">Video Icons</h3>
-              <div className="flex flex-wrap gap-3">
-                {videoIconsNames
-                  .filter((icon) =>
-                    searchValue.length > 0
-                      ? searchValue.some((e) => e.item === icon)
-                      : true
-                  )
-                  .map((name) => (
-                    <Card
-                      icon={<VideoIcon name={name} size={size} />}
-                      name={name}
-                      key={name}
-                    />
-                  ))}
-              </div>
-            </div>
-          )}
-          {existsInCategory(musicIconsNames) && (
-            <div className="flex flex-col gap-6">
-              <h3 className="font-bold text-xl text-gray-200">Music Icons</h3>
-              <div className="flex flex-wrap gap-3">
-                {musicIconsNames
-                  .filter((icon) =>
-                    searchValue.length > 0
-                      ? searchValue.some((e) => e.item === icon)
-                      : true
-                  )
-                  .map((name) => (
-                    <Card
-                      icon={<MusicIcon name={name} size={size} />}
-                      name={name}
-                      key={name}
-                    />
-                  ))}
-              </div>
-            </div>
-          )}
-          {existsInCategory(financeIconsNames) && (
-            <div className="flex flex-col gap-6">
-              <h3 className="font-bold text-xl text-gray-200">Finance Icons</h3>
-              <div className="flex flex-wrap gap-3">
-                {financeIconsNames
-                  .filter((icon) =>
-                    searchValue.length > 0
-                      ? searchValue.some((e) => e.item === icon)
-                      : true
-                  )
-                  .map((name) => (
-                    <Card
-                      icon={<FinanceIcon name={name} size={size} />}
-                      name={name}
-                      key={name}
-                    />
-                  ))}
-              </div>
-            </div>
-          )}
-          {/* <div className="flex flex-col gap-6">
-            <h3 className="font-bold text-xl text-gray-200">Country Icons</h3>
-            {otherIconsNames.map((name) => (
-              <CountryIcon key={name} name={name} size={size} />
-            ))}
-          </div> */}
-          {existsInCategory(otherIconsNames) && (
-            <div className="flex flex-col gap-6">
-              <h3 className="font-bold text-xl text-gray-200">Other Icons</h3>
-              <div className="flex flex-wrap gap-3">
-                {otherIconsNames
-                  .filter((icon) =>
-                    searchValue.length > 0
-                      ? searchValue.some((e) => e.item === icon)
-                      : true
-                  )
-                  .map((name) => (
-                    <Card
-                      icon={<OtherIcon name={name} size={size} />}
-                      name={name}
-                      key={name}
-                    />
-                  ))}
-              </div>
-            </div>
-          )}
+          <Section
+            componentName="BrowserIcon"
+            title="Browser Icons"
+            iconNames={browserIconsNames}
+          />
+          <Section
+            componentName="SocialIcon"
+            title="Social Icons"
+            iconNames={socialIconNames}
+          />
+          <Section
+            componentName="MessengerIcon"
+            title="Messenger Icons"
+            iconNames={messengerIconNames}
+          />
+          <Section
+            componentName="CodingIcon"
+            title="Coding Icons"
+            iconNames={codingIconNames}
+          />
+          <Section
+            componentName="ProductivityIcon"
+            title="Productivity Icons"
+            iconNames={productivityIconNames}
+          />
+          <Section
+            componentName="DesignIcon"
+            title="Design Icons"
+            iconNames={designIconsNames}
+          />
+          <Section
+            componentName="OSIcon"
+            title="OS Icons"
+            iconNames={osIconsNames}
+          />
+          <Section
+            componentName="VideoIcon"
+            title="Video Icons"
+            iconNames={videoIconsNames}
+          />
+          <Section
+            componentName="MusicIcon"
+            title="Music Icons"
+            iconNames={musicIconsNames}
+          />
+          <Section
+            componentName="FinanceIcon"
+            title="Finance Icons"
+            iconNames={financeIconsNames}
+          />
+          <Section
+            componentName="OtherIcon"
+            title="Other Icons"
+            iconNames={otherIconsNames}
+          />
+          <Section
+            componentName="CountryIcon"
+            title="Country Icons"
+            iconNames={countryIconNames}
+          />
         </div>
       </main>
     </ChakraProvider>
